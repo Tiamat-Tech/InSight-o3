@@ -16,7 +16,8 @@
 
 ---
 
-The ability for AI agents to *"think with images"* requires a sophisticated blend of reasoning and perception.
+> The ability for AI agents to *"think with images"* requires a sophisticated blend of reasoning and perception.
+
 We introduce **O3-Bench**, a new benchmark that requires agents to piece together subtle visual information from distinct image areas through multi-step, interleaved reasoning (see below, zoom in for a clearer view).
 
 <p align="center">
@@ -27,7 +28,7 @@ To address the challenge presented by O3-Bench, we propose **InSight-o3**, a mul
 For vSearcher, we focus on the task of *generalized visual search*—locating relational, fuzzy, or conceptual regions described in free-form language, beyond just simple objects or figures in natural images.
 
 We train a multimodal LLM vSearcher specifically for this task via reinforcement learning.
-Our vSearcher empowers frontier multimodal models (which serve as vReasoners), significantly improving their performance on a wide range of benchmarks including O3-Bench.
+Our vSearcher empowers frontier multimodal models (which serve as vReasoners), significantly improving their performance on a wide range of benchmarks including O3-Bench, e.g., from **39.0%** to **61.5%** for GPT-5-mini, and from **60.4%** to **69.7%** for Gemini-2.5-Flash.
 
 ## Benchmark
 O3-Bench consists of two domains: *composite charts* and *digital maps*, both of which are challenging for frontier multimodal models/systems, e.g., OpenAI o3's accuracy on O3-Bench is 40.8% by our evaluation via the official API.
