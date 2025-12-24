@@ -28,10 +28,10 @@ Here is an example of **InSight-o3** (w/ GPT-5-mini as vReasoner) solving a prob
   <img alt="O3-Bench illustration" src="assets/teaser.svg" style="max-width: 100%;">
 </p>
 
-The vSearcher of InSight-o3 aims to solve the task of __*generalized visual search*__—locating *relational*, *fuzzy*, or *conceptual* regions described in *free-form* language, beyond just simple objects or figures in natural images.
+The vSearcher of InSight-o3 aims to solve the task of __*generalized visual search*__—locating *relational*, *fuzzy*, or *conceptual* regions described in *free-form* language, e.g., "the area to the left of the parking lot," and "the chart showing the company's revenue in the last decade," beyond just simple objects or figures in natural images.
 We train a multimodal LLM (Qwen2.5-VL-7B) specifically for this task via RL.
 
-Our vSearcher (named **InSight-o3-vS**) empowers frontier multimodal foundation models (which serve as vReasoners), significantly improving their performance on a wide range of benchmarks including [V*-Bench](https://huggingface.co/datasets/craigwu/vstar_bench) (**73.8%** ➡️ **86.9%** for GPT-5-mini, and **80.1%** ➡️ **87.6%** for Gemini-2.5-Flash) and [O3-Bench](https://huggingface.co/datasets/m-Just/O3-Bench) (**39.0%** ➡️ **61.5%** for GPT-5-mini, and **60.4%** ➡️ **69.7%** for Gemini-2.5-Flash).
+🌟 **Performance.** Our vSearcher (named **InSight-o3-vS**) empowers frontier multimodal foundation models (which serve as vReasoners), significantly improving their performance on a wide range of benchmarks including [V*-Bench](https://huggingface.co/datasets/craigwu/vstar_bench) (**73.8%** ➡️ **86.9%** for GPT-5-mini, and **80.1%** ➡️ **87.6%** for Gemini-2.5-Flash) and [O3-Bench](https://huggingface.co/datasets/m-Just/O3-Bench) (**39.0%** ➡️ **61.5%** for GPT-5-mini, and **60.4%** ➡️ **69.7%** for Gemini-2.5-Flash).
 
 ## Benchmark
 O3-Bench has two domains:&nbsp; 📊 __*composite charts*__&nbsp; and &nbsp;🗺️ __*digital maps*__.
