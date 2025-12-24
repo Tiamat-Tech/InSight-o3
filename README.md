@@ -16,28 +16,39 @@
 
 ---
 
-> The ability for AI agents to *"think with images"* requires a sophisticated blend of reasoning and perception.
+**The ability for AI agents to *"think with images"* requires a sophisticated blend of *reasoning* and *perception*.**
+In our work, "[InSight-o3: Empowering Multimodal Foundation Models with Generalized Visual Search](https://arxiv.org/abs/2512.18745)":
+- We introduce **O3-Bench**, a new benchmark for multimodal reasoning with interleaved attention to visual details. It tests how well an AI agent can truly "think with images".
+- We propose **InSight-o3**, a multi-agent framework consisting of a visual reasoning agent (__*vReasoner*__) and a visual search agent (__*vSearcher*__), to address the challenge presented by O3-Bench through task decomposition and specialization.
 
-We introduce **O3-Bench**, a new benchmark that requires agents to piece together subtle visual information from distinct image areas through multi-step, interleaved reasoning (see below, zoom in for a clearer view).
+> The name, "InSight-o3", reflects its dual role: providing deeper *insight* into multimodal semantics while bringing the target region *in sight* through precise localization with vSearcher.
 
+Here is an example of **InSight-o3** (w/ GPT-5-mini as vReasoner) solving a problem in **O3-Bench**:
 <p align="center">
   <img alt="O3-Bench illustration" src="assets/teaser.svg" style="max-width: 100%;">
 </p>
 
-To address the challenge presented by O3-Bench, we propose **InSight-o3**, a multi-agent framework consisting of a visual reasoning agent (*vReasoner*) and a visual search agent (*vSearcher*).
-For vSearcher, we focus on the task of *generalized visual search*—locating relational, fuzzy, or conceptual regions described in free-form language, beyond just simple objects or figures in natural images.
+The vSearcher of InSight-o3 aims to solve the task of __*generalized visual search*__—locating *relational*, *fuzzy*, or *conceptual* regions described in *free-form* language, beyond just simple objects or figures in natural images.
+We train a multimodal LLM (Qwen2.5-VL-7B) specifically for this task via RL.
 
-We train a multimodal LLM vSearcher specifically for this task via reinforcement learning.
-Our vSearcher empowers frontier multimodal models (which serve as vReasoners), significantly improving their performance on a wide range of benchmarks including O3-Bench, e.g., from **39.0%** to **61.5%** for GPT-5-mini, and from **60.4%** to **69.7%** for Gemini-2.5-Flash.
+Our vSearcher (named **InSight-o3-vS**) empowers frontier multimodal foundation models (which serve as vReasoners), significantly improving their performance on a wide range of benchmarks including [V*-Bench](https://huggingface.co/datasets/craigwu/vstar_bench) (**73.8%** ➡️ **86.9%** for GPT-5-mini, and **80.1%** ➡️ **87.6%** for Gemini-2.5-Flash) and [O3-Bench](https://huggingface.co/datasets/m-Just/O3-Bench) (**39.0%** ➡️ **61.5%** for GPT-5-mini, and **60.4%** ➡️ **69.7%** for Gemini-2.5-Flash).
 
 ## Benchmark
-O3-Bench consists of two domains: *composite charts* and *digital maps*, both of which are challenging for frontier multimodal models/systems, e.g., OpenAI o3's accuracy on O3-Bench is 40.8% by our evaluation via the official API.
+O3-Bench has two domains:&nbsp; 📊 __*composite charts*__&nbsp; and &nbsp;🗺️ __*digital maps*__.
+They are designed with two key principles in mind:
+- **High resolution & high information density.** Images are large, high-resolution, cluttered, and *information-dense*, making evidence gathering *genuinely non-trivial*.
+- **Multi-hop solution paths.** Solutions require piecing together *subtle* visual evidence from *distinct* image areas through *multi-step*, *interleaved* reasoning.
+
+Both domains are challenging for current frontier multimodal models/systems, e.g., OpenAI o3's accuracy on O3-Bench is **40.8%** by our evaluation via the official API; in comparison, an *average* human can easily achieve **>95%** accuracy.
+
 The full benchmark results are shown below.
 <p align="center">
   <img alt="Benchmark results" src="assets/benchmark.png" width="650" style="max-width: 100%;">
 </p>
 
-All results are averaged over 3 random trials. All models/systems are given a 16K tokens/repsonse budget including reasoning tokens (i.e., `max_completion_tokens=16384`). The performancne gap between GPT and Gemini is partly because OpenAI restricts the input image resolution of GPT models to roughly 1280×1280px (as per [OpenAI API](https://platform.openai.com/docs/guides/images-vision#calculating-costs)).
+To account for sampling randomness, the results above are averaged over 3 random trials.
+All models/systems are given a 16K tokens/repsonse budget including reasoning tokens (i.e., `max_completion_tokens=16384`).
+The performance gap between GPT and Gemini is partly because OpenAI restricts the input image resolution of GPT models to roughly 1280×1280px (as per [OpenAI API](https://platform.openai.com/docs/guides/images-vision#calculating-costs)).
 For models other than GPT, we use a much higher, 3500×3500px image resolution.
 
 To reproduce the results or evaluate your own models on O3-Bench, please follow the guide below.
@@ -78,23 +89,23 @@ python -m insight_o3.scripts.evaluate \
 You can also manually download the dataset from [HuggingFace](https://huggingface.co/datasets/m-Just/O3-Bench).
 Just remember to change `--ann_file` and `--img_dir` accordingly if you place the data at a different location.
 
-For consistency with our results, we recommend using `gpt-5-nano` as the judge model.
+**For consistency with our results, we recommend using `gpt-5-nano` as the judge model.**
 By default, a single trial will be run. You can run multiple trials by specifying `--num_trials <num_trials>`.
 Completed trials will be skipped instead of overwritten.
 The evaluation results will be saved under `outputs/eval/<eval_name>`.
 
-See [`insight_o3/scripts/examples/evaluate_qwen3_vl.sh`](insight_o3/scripts/examples/evaluate_qwen3_vl.sh) for a more concrete example based on Qwen3-VL-8B-Instruct served by a local vLLM instance.
+**See [`insight_o3/scripts/examples/evaluate_qwen3_vl.sh`](insight_o3/scripts/examples/evaluate_qwen3_vl.sh) for a more concrete example based on self-hosted Qwen3-VL-8B-Instruct using vLLM.**
 
 To visualize the evaluation outputs, see [`notebooks/visualize_output.ipynb`](notebooks/visualize_output.ipynb).
 
 ### Other benchmarks
-Our code also supports evaluation on other datasets (including the ones we used in our paper).
+Our code also supports evaluation on other datasets (including all the benchmarks we used in our paper).
 If you want to evaluate on those datasets, please follow [`data/README.md`](data/README.md) to prepare the data first.
 To reproduce the baseline results, see [`insight_o3/scripts/examples/sweep_baselines.sh`](insight_o3/scripts/examples/sweep_baselines.sh).
 
 > We currently only supports evaluating models/systems accessible via a single API call.
 The evaluation code for InSight-o3 (which involves interactions between two models) is still in preparation.
-The training code for InSight-o3 will come soon as well.
+The training code for InSight-o3 will come soon as well. Please stay tuned!
 
 ## Citation
 
