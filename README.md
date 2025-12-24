@@ -46,10 +46,10 @@ The full benchmark results are shown below.
   <img alt="Benchmark results" src="assets/benchmark.png" width="650" style="max-width: 100%;">
 </p>
 
-To account for sampling randomness, the results above are averaged over 3 random trials.
-All models/systems are given a 16K tokens/repsonse budget including reasoning tokens (i.e., `max_completion_tokens=16384`).
-The performance gap between GPT and Gemini is partly because OpenAI restricts the input image resolution of GPT models to roughly 1280×1280px (as per [OpenAI API](https://platform.openai.com/docs/guides/images-vision#calculating-costs)).
-For models other than GPT, we use a much higher, 3500×3500px image resolution.
+To account for sampling randomness, the results above are averaged over **3** random trials.
+All models/systems are given a **16K** tokens/repsonse budget including reasoning tokens (i.e., `max_completion_tokens=16384`).
+The performance gap between GPT and Gemini is partly because OpenAI restricts the input image resolution of GPT models to roughly **1280×1280px** (as per [OpenAI API](https://platform.openai.com/docs/guides/images-vision#calculating-costs)).
+For models other than GPT, we use a much higher, **3500×3500px** image resolution.
 
 To reproduce the results or evaluate your own models on O3-Bench, please follow the guide below.
 
@@ -90,8 +90,8 @@ You can also manually download the dataset from [HuggingFace](https://huggingfac
 Just remember to change `--ann_file` and `--img_dir` accordingly if you place the data at a different location.
 
 **For consistency with our results, we recommend using `gpt-5-nano` as the judge model.**
-By default, a single trial will be run. You can run multiple trials by specifying `--num_trials <num_trials>`.
-Completed trials will be skipped instead of overwritten.
+By default, a *single* trial will be run. You can run multiple trials by specifying `--num_trials <num_trials>`.
+Completed trials will be *skipped* instead of *overwritten*.
 The evaluation results will be saved under `outputs/eval/<eval_name>`.
 
 **See [`insight_o3/scripts/examples/evaluate_qwen3_vl.sh`](insight_o3/scripts/examples/evaluate_qwen3_vl.sh) for a more concrete example based on self-hosted Qwen3-VL-8B-Instruct using vLLM.**
@@ -101,7 +101,7 @@ To visualize the evaluation outputs, see [`notebooks/visualize_output.ipynb`](no
 ### Other benchmarks
 Our code also supports evaluation on other datasets (including all the benchmarks we used in our paper).
 If you want to evaluate on those datasets, please follow [`data/README.md`](data/README.md) to prepare the data first.
-To reproduce the baseline results, see [`insight_o3/scripts/examples/sweep_baselines.sh`](insight_o3/scripts/examples/sweep_baselines.sh).
+To reproduce the baseline results in our paper, see [`insight_o3/scripts/examples/sweep_baselines.sh`](insight_o3/scripts/examples/sweep_baselines.sh).
 
 > We currently only supports evaluating models/systems accessible via a single API call.
 The evaluation code for InSight-o3 (which involves interactions between two models) is still in preparation.
