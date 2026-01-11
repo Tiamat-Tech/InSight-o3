@@ -9,13 +9,13 @@
 
 <div align="center">
 
-🤗 **[O3-Bench](https://huggingface.co/datasets/m-Just/O3-Bench)** |
+🤗 **[Models and Datasets](https://huggingface.co/collections/m-Just/insight-o3)** |
 📄 **[Paper](https://arxiv.org/abs/2512.18745)**
 
 </div>
 
 ## What's new
-- [x] O3-Bench and evaluation code released!
+- [x] [O3-Bench](https://huggingface.co/datasets/m-Just/O3-Bench) and evaluation code released!
 - [ ] InSight-o3 vSearcher model, training \& evaluation code release (coming soon!)
 - [ ] InSight-o3 training data release
 
