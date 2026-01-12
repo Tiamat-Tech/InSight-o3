@@ -16,8 +16,8 @@
 
 ## What's new
 - [x] [O3-Bench](https://huggingface.co/datasets/m-Just/O3-Bench) and evaluation code released!
-- [ ] InSight-o3 vSearcher model, training \& evaluation code release (coming soon!)
-- [ ] InSight-o3 training data release
+- [x] InSight-o3 vSearcher model, training \& evaluation code released!
+- [ ] InSight-o3 training data release (coming soon!)
 
 ---
 
