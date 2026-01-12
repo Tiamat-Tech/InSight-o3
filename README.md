@@ -186,7 +186,7 @@ bash recipe/vsearch/val.sh
 ```
 The vSearcher model will be downloaded automatically from [HuggingFace](https://huggingface.co/m-Just/InSight-o3-vS).
 
-Since the evaluation is based on API, there will be randomness in the results (the fluctuation can be huge sometimes).
+Since the evaluation is based on API, **there will be randomness in the results** (the fluctuation can be huge sometimes).
 We recommend setting `NUM_VAL_TRIALS` to at least 3 and computing the average for more reliable results.
 
 ### Training
