@@ -1,3 +1,7 @@
 [submodule "data/O3-Bench"]
 	path = data/O3-Bench
 	url = https://huggingface.co/datasets/m-Just/O3-Bench
+[submodule "verl"]
+	path = verl
+	url = https://github.com/m-Just/verl-public.git
+	branch = insight_o3
