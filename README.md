@@ -158,7 +158,7 @@ For evaluation, set `agent_name` to `vreasoner`. For training, depending on whet
 After preparing the data, you can run the evaluation with the following code snippet:
 ```sh
 # Start at the project root dir and add it to PYTHONPATH
-export PYTHONPATH="$(pwd)$:$PYTHONPATH"
+export PYTHONPATH="$(pwd):$PYTHONPATH"
 
 # Go inside verl and set things up
 cd verl
@@ -190,16 +190,16 @@ For training, simply change the above snippet for evaluation as follows:
 1. Add `export TRAIN_FILES='<path(s) to training dataset file(s) (in parquet format)>'`
 2. Change the launching script to `recipe/vsearch/train.sh`.
 3. Set `export NUM_VAL_TRIALS=1`.
-4. Optionally, add `export OPENAI_CLIENT_TIMEOUT=60`. This helps speed up training by reducing the waiting time for only a few lagging API requests. Increase this value if you see many API timeouts during training.
+4. Optionally, add `export OPENAI_CLIENT_TIMEOUT=60`. This helps speed up training by reducing the waiting time for laggy API requests. Increase this value if you see many API timeouts during training.
 
-The current training script assumes the two training datasets introduced in our paper, mixed with 1:1 ratio as can be seen from the following part of `recipe/vsearch/train.sh`:
+The current training script uses the two training datasets introduced in our paper, mixed with 1:1 ratio as can be seen from the following part of `recipe/vsearch/train.sh`:
 ```
   +data.batch_sampler.weights.info_vqa_region_localization=0.5 \
   +data.batch_sampler.weights.merged_compound=0.5 \
 ```
 To use your own training datasets, you need to replace the name after `+data.batch_sampler.weights.` with the name you put in the `data_source` field of your training data parquet files.
 
-**Notes:** More detailed configurations for training and evaluation can be found in `recipe/vsearch/_base.sh` and `recipe/vsearch/config/qwen_2_5_vl_7b_async.yaml`.
+**Notes:** More detailed configurations for training and evaluation can be found in `recipe/vsearch/_base.sh` and `recipe/vsearch/config/qwen_2_5_vl_7b_async.yaml`. Feel free to open issues if there's anything unclear!
 
 ## Citation
 
