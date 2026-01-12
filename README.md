@@ -138,11 +138,11 @@ uv pip install transformers==4.57.3 ray==2.53.0 qwen-vl-utils==0.0.10 openai==2.
 Other versions are not tested.
 
 ### Data preparation
-Follow [this guide](https://verl.readthedocs.io/en/latest/preparation/prepare_data.html) to pack your evaluation dataset into a parquet file with the following columns: `data_source`, `prompt`, `images`, `reward_model`, `extra_info`, and `agent_name`.
+Follow [this guide](https://verl.readthedocs.io/en/latest/preparation/prepare_data.html) to pack your training/evaluation datasets into parquet files with the following columns: `data_source`, `prompt`, `images`, `reward_model`, `extra_info`, and `agent_name`.
 
 In particular, the `images` column stores the file paths of the images, e.g., each row of `images` should look like
 ```
-[{'image': 'file:///path/to/images/0.jpg'}]
+[{'image': 'file:///path/to/images/0.jpg'}]   # currently only support single-image QA
 ```
 
 The `reward_model` columns stores the ground truth answer for each row, e.g.,
@@ -150,12 +150,12 @@ The `reward_model` columns stores the ground truth answer for each row, e.g.,
 {'ground_truth': 'C', 'style': 'rule'}
 ```
 
-If your dataset has ground-truth bounding boxes, put them as a list of `(x1, y1, x2, y2)` under `bboxes` of `extra_info`. This is only required for the out-of-loop RL training.
+If your dataset has ground-truth bounding boxes, put them as a list of `(x1, y1, x2, y2)` under `bboxes` of `extra_info`. This is only required for out-of-loop RL.
 
 For evaluation, set `agent_name` to `vreasoner`. For training, depending on whether the dataset is used for the in-loop or out-of-loop subagent RL, set `agent_name` to `vreasoner` or `vsearcher`, respectively.
 
 ### Evaluation
-After preparing the data, you can run the evaluation with the following code snippet:
+After preparing the data, you can run evaluation with the following code snippet:
 ```sh
 # Start at the project root dir and add it to PYTHONPATH
 export PYTHONPATH="$(pwd):$PYTHONPATH"
@@ -166,16 +166,16 @@ export VERL_PROJ_DIR="$(pwd)"
 export MODEL_PATH='m-Just/InSight-o3-vS'
 
 export WORK_DIR='<root path for saving logs, checkpoints, etc.>'
-export PROJECT_NAME='InSight-o3'
+export PROJECT_NAME='my_project'
 export EXP_NAME='my_experiment'
 export EVAL_NAME='my_eval'
 # outputs will be saved under "$WORK_DIR/val_results/$PROJECT_NAME/$EXP_NAME/$EVAL_NAME" by default
 
 export API_MODEL_FOR_AGENT='<vReasoner model>'  # e.g., gpt-5-mini
+# agent configuration: `recipe/vsearch/config/agent_${API_MODEL_FOR_AGENT}.yaml`
 export JUDGE_MODEL='<judge model>'              # e.g., gpt-5-nano
 export OPENAI_BASE_URL='<api base url>'
 export OPENAI_API_KEY='<api key>'
-export GPT_IMAGE_MAX_AREA='<area in pixels>'    # we use 1280*1280 for GPTs and 3500*3500 for others
 # OPENAI_BASE_URL and OPENAI_API_KEY will be used for both the vReasoner and the judge model
 
 export VAL_FILES='<path(s) to evaluation dataset file(s) (in parquet format)>'
@@ -191,10 +191,11 @@ We recommend setting `NUM_VAL_TRIALS` to at least 3 and computing the average fo
 
 ### Training
 For training, simply change the above snippet for evaluation as follows:
-1. Add `export TRAIN_FILES='<path(s) to training dataset file(s) (in parquet format)>'`
-2. Change the launching script to `recipe/vsearch/train.sh`.
-3. Set `export NUM_VAL_TRIALS=1`.
-4. Optionally, add `export OPENAI_CLIENT_TIMEOUT=60`. This helps speed up training by reducing the waiting time for laggy API requests. Increase this value if you see many API timeouts during training.
+- Add `export TRAIN_FILES='<path(s) to training dataset file(s) (in parquet format)>'`.
+- Change `MODEL_PATH` if needed (e.g., to `Qwen/Qwen2.5-VL-7B-Instruct`).
+- Change the launching script to `recipe/vsearch/train.sh`.
+- Set `NUM_VAL_TRIALS=1`.
+- Optionally, add `export OPENAI_CLIENT_TIMEOUT=60`. This helps speed up training by reducing the waiting time for laggy API requests. Increase this value if you see many API timeouts during training.
 
 The current training script uses the two training datasets introduced in our paper, mixed with 1:1 ratio as can be seen from the following part of `recipe/vsearch/train.sh`:
 ```
