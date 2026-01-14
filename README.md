@@ -30,7 +30,7 @@ In our work, "[InSight-o3: Empowering Multimodal Foundation Models with Generali
 
 Here is an example of **InSight-o3** (w/ GPT-5-mini as vReasoner) solving a problem in **O3-Bench**:
 <p align="center">
-  <img alt="O3-Bench illustration" src="assets/teaser.svg" style="max-width: 100%;">
+  <img alt="O3-Bench illustration" src="assets/teaser.png" style="max-width: 100%;">
 </p>
 
 The vSearcher of InSight-o3 aims to solve the task of __*generalized visual search*__—locating *relational*, *fuzzy*, or *conceptual* regions described in *free-form* language, e.g., "the area to the left of the parking lot," and "the chart showing the company's revenue in the last decade," beyond just simple objects or figures in natural images.
