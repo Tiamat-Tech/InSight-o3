@@ -17,7 +17,7 @@
 ## What's new
 - [x] [2025/12/24] [O3-Bench](https://huggingface.co/datasets/m-Just/O3-Bench) and evaluation code released!
 - [x] [2026/1/12] [InSight-o3 vSearcher model](https://huggingface.co/m-Just/InSight-o3-vS), training \& evaluation code released!
-- [ ] InSight-o3 training data release (coming soon🚀)
+- [x] [2026/1/16] InSight-o3 training data released! See [VisCoT_VStar_Collage](https://huggingface.co/datasets/m-Just/VisCoT_VStar_Collage) and [InfoVQA_RegionLocalization](https://huggingface.co/datasets/m-Just/InfoVQA_RegionLocalization).
 
 ---
 
@@ -138,8 +138,16 @@ uv pip install transformers==4.57.3 ray==2.53.0 qwen-vl-utils==0.0.10 openai==2.
 Other versions are not tested.
 
 ### Data preparation
-Follow [this guide](https://verl.readthedocs.io/en/latest/preparation/prepare_data.html) to pack your training/evaluation datasets into parquet files with the following columns: `data_source`, `prompt`, `images`, `reward_model`, `extra_info`, and `agent_name`.
+Download the training data with the following command:
+```
+git submodule init data/VisCoT_VStar_Collage data/InfoVQA_RegionLocalization
+git submodule update --remote data/VisCoT_VStar_Collage data/InfoVQA_RegionLocalization
+```
 
+Then, use [`create_parquet_dataset.py`](verl/recipe/vsearch/create_parquet_dataset.py) to pack the downloaded datasets into [verl-compatible](https://verl.readthedocs.io/en/latest/preparation/prepare_data.html) parquet files.
+See **example usages** commented in `create_parquet_dataset.py` for the exact commands to pack the training/evaluation datasets.
+
+Successfully packed datasets should have these columns: `data_source`, `prompt`, `images`, `reward_model`, `extra_info`, and `agent_name`.
 In particular, the `images` column stores the file paths of the images, e.g., each row of `images` should look like
 ```
 [{'image': 'file:///path/to/images/0.jpg'}]   # currently only support single-image QA
@@ -150,9 +158,11 @@ The `reward_model` columns stores the ground truth answer for each row, e.g.,
 {'ground_truth': 'C', 'style': 'rule'}
 ```
 
-If your dataset has ground-truth bounding boxes, put them as a list of `(x1, y1, x2, y2)` under `bboxes` of `extra_info`. This is only required for out-of-loop RL.
+The `agent_name` indicate the main agent on which the data is used.
+For training data, depending on whether the data is used for the in-loop or out-of-loop subagent RL, `agent_name` should be set to `vreasoner` or `vsearcher`, respectively.
 
-For evaluation, set `agent_name` to `vreasoner`. For training, depending on whether the dataset is used for the in-loop or out-of-loop subagent RL, set `agent_name` to `vreasoner` or `vsearcher`, respectively.
+If your dataset has ground-truth bounding boxes, put them as a list of `(x1, y1, x2, y2)` under `bboxes` of `extra_info`. This is **required** for out-of-loop RL.
+
 
 ### Training
 After preparing the data, you can start training with the following code snippet:
@@ -188,7 +198,7 @@ The current training script uses the two training datasets introduced in our pap
 They are mixed in 1:1 ratio as can be seen from the following part of `recipe/vsearch/train.sh`:
 ```
   +data.batch_sampler.weights.info_vqa_region_localization=0.5 \
-  +data.batch_sampler.weights.merged_compound=0.5 \
+  +data.batch_sampler.weights.visual_cot_vstar_collage=0.5
 ```
 To use your own training datasets, you need to replace the name after `+data.batch_sampler.weights.` with the name you put in the `data_source` field of your training data parquet files.
 

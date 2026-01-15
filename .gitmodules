@@ -5,3 +5,9 @@
 	path = verl
 	url = https://github.com/m-Just/verl-public.git
 	branch = insight_o3
+[submodule "data/VisCoT_VStar_Collage"]
+	path = data/VisCoT_VStar_Collage
+	url = https://huggingface.co/datasets/m-Just/VisCoT_VStar_Collage
+[submodule "data/InfoVQA_RegionLocalization"]
+	path = data/InfoVQA_RegionLocalization
+	url = https://huggingface.co/datasets/m-Just/InfoVQA_RegionLocalization
