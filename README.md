@@ -68,10 +68,9 @@ You can download O3-Bench with the following command if you have `git-lfs` insta
 git submodule init data/O3-Bench
 git submodule update --remote data/O3-Bench
 ```
-The downloaded data will be placed under `data/O3-Bench`.
-You can visualize them using [`notebooks/visualize_o3_bench.ipynb`](notebooks/visualize_o3_bench.ipynb).
+You can visualize the downloaded data using [`notebooks/visualize_o3_bench.ipynb`](notebooks/visualize_o3_bench.ipynb).
 
-To evaluate, run the following command:
+To evaluate a model on O3-Bench, run the following command:
 ```sh
 MODEL='<model>'
 API_BASE_URL='<api base url>'
@@ -119,7 +118,7 @@ git submodule init verl
 git submodule update --remote verl
 ```
 
-Then, follow the [installation guide](https://verl.readthedocs.io/en/latest/start/install.html) to install verl and its dependencies.
+Then, follow the [installation guide](https://verl.readthedocs.io/en/latest/start/install.html#install-dependencies) to install verl and its dependencies.
 We recommend installing the following packages **in these versions**:
 ```
 torch==2.8.0+cu126
@@ -136,7 +135,7 @@ uv pip install vllm==0.10.2 --torch-backend=cu126
 uv pip install flash-attn==2.8.3 --no-build-isolation   # this may take a while
 uv pip install transformers==4.57.3 ray==2.53.0 qwen-vl-utils==0.0.10 openai==2.14.0
 ```
-Other versions are not tested.
+Please note that other versions are not tested.
 
 ### Data preparation
 You can download the training data with the following command:
@@ -145,7 +144,7 @@ git submodule init data/VisCoT_VStar_Collage data/InfoVQA_RegionLocalization
 git submodule update --remote data/VisCoT_VStar_Collage data/InfoVQA_RegionLocalization
 ```
 
-Then, use [`create_parquet_dataset.py`](https://github.com/m-Just/verl-public/blob/insight_o3/recipe/vsearch/create_parquet_dataset.py) to pack the downloaded datasets into [verl-compatible](https://verl.readthedocs.io/en/latest/preparation/prepare_data.html) parquet files.
+Then, use [`verl/recipe/vsearch/create_parquet_dataset.py`](https://github.com/m-Just/verl-public/blob/insight_o3/recipe/vsearch/create_parquet_dataset.py) to pack the downloaded datasets into [verl-compatible](https://verl.readthedocs.io/en/latest/preparation/prepare_data.html) parquet files.
 See **example usages** commented in `create_parquet_dataset.py` for the exact commands to pack the training/evaluation datasets.
 
 Successfully packed datasets should have these columns: `data_source`, `prompt`, `images`, `reward_model`, `extra_info`, and `agent_name`.
@@ -159,10 +158,10 @@ The `reward_model` columns stores the ground truth answer for each row, e.g.,
 {'ground_truth': 'C', 'style': 'rule'}
 ```
 
-The `agent_name` indicate the main agent on which the data is used.
-For training data, depending on whether the data is used for the in-loop or out-of-loop subagent RL, `agent_name` should be set to `vreasoner` or `vsearcher`, respectively.
+The `agent_name` indicates the main agent on which the data is to be used.
+For training, depending on whether the data is used for the in-loop or out-of-loop subagent RL, `agent_name` should be set to `vreasoner` or `vsearcher`, respectively.
 
-If your dataset has ground-truth bounding boxes, put them as a list of `(x1, y1, x2, y2)` under `bboxes` of `extra_info`. This is **required** for out-of-loop RL.
+If your dataset has ground-truth bounding boxes, put them as a list of `(x1, y1, x2, y2)` under `bboxes` of `extra_info`. This is (only) **required** for out-of-loop RL.
 
 
 ### Training
@@ -209,8 +208,6 @@ For evaluation, simply change the above snippet for training as follows:
 - Change `MODEL_PATH` if needed (e.g., to [`m-Just/InSight-o3-vS`](https://huggingface.co/m-Just/InSight-o3-vS) for our vSearcher model).
 - Change `VAL_FILES` if needed.
 - Optionally, add `export NUM_VAL_TRIALS='<number of evaluation trials to run>'`.
-
-HuggingFace models specified by `MODEL_PATH` will be downloaded automatically when you run the evaluation.
 
 Since the evaluation is partly based on API, **there will be randomness in the results** (the fluctuation can be huge sometimes).
 We recommend setting `NUM_VAL_TRIALS` to at least 3 and computing the average for more reliable results.
