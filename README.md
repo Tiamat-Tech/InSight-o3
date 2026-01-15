@@ -175,9 +175,7 @@ export API_MODEL_FOR_AGENT='<vReasoner model>'  # e.g., gpt-5-mini
 export JUDGE_MODEL='<judge model>'              # e.g., gpt-5-nano
 export OPENAI_BASE_URL='<api base url>'
 export OPENAI_API_KEY='<api key>'
-export OPENAI_CLIENT_TIMEOUT=60  # prevent laggy API requests from slowing down training
 # `OPENAI_*` settings will be applied to both the vReasoner and the judge model
-# Increase `OPENAI_CLIENT_TIMEOUT` if you see many API timeouts during training
 
 export TRAIN_FILES='<path(s) to training dataset file(s) (in parquet format)>'
 export VAL_FILES='<path(s) to validation dataset file(s) (in parquet format)>'
@@ -197,7 +195,6 @@ To use your own training datasets, you need to replace the name after `+data.bat
 ### Evaluation
 For evaluation, simply change the above snippet for training as follows:
 - Change the launching script to `recipe/vsearch/val.sh`.
-- Remove `export OPENAI_CLIENT_TIMEOUT=60` for more patience.
 - Change `MODEL_PATH` if needed (e.g., to [`m-Just/InSight-o3-vS`](https://huggingface.co/m-Just/InSight-o3-vS) for our vSearcher model).
 - Change `VAL_FILES` if needed.
 - Optionally, add `export NUM_VAL_TRIALS='<number of evaluation trials to run>'`.
