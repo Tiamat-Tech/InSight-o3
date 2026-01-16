@@ -202,6 +202,9 @@ They are mixed in 1:1 ratio as can be seen from the following part of `recipe/vs
 ```
 To use your own training datasets, you need to replace the name after `+data.batch_sampler.weights.` with the name you put in the `data_source` field of your training data parquet files.
 
+Auto-resuming is enabled by default. You can run the same command to resume training.
+More detailed configurations for training and evaluation can be found in `recipe/vsearch/_base.sh` and `recipe/vsearch/config/qwen_2_5_vl_7b_async.yaml`. Feel free to open issues if there's anything unclear!
+
 ### Evaluation
 For evaluation, simply change the above snippet for training as follows:
 - Change the launching script to `recipe/vsearch/val.sh`.
@@ -209,10 +212,17 @@ For evaluation, simply change the above snippet for training as follows:
 - Change `VAL_FILES` if needed.
 - Optionally, add `export NUM_VAL_TRIALS='<number of evaluation trials to run>'`.
 
+There are three key result metrics:
+- `accuracy_reward`: this is the accuracy on the evaluation dataset.
+- `critical_failure_ratio`: this is the ratio of failed queries due to API errors.
+- `has_answer`: this is the ratio of queries for which the agent has successfully generated an answer.
+
 Since the evaluation is partly based on API, **there will be randomness in the results** (the fluctuation can be huge sometimes).
 We recommend setting `NUM_VAL_TRIALS` to at least 3 and computing the average for more reliable results.
 
-**Notes:** More detailed configurations for training and evaluation can be found in `recipe/vsearch/_base.sh` and `recipe/vsearch/config/qwen_2_5_vl_7b_async.yaml`. Feel free to open issues if there's anything unclear!
+By default, verl will look for checkpoints under `trainer.default_local_dir` (set to `$WORK_DIR/ckpts/$PROJECT_NAME/$EXP_NAME`) and try to load the latest checkpoint.
+If this is not the desired behavior, e.g., you just want to evaluate the original model specified by `MODEL_PATH`, you can either change `trainer.default_local_dir` or turn auto-resuming off.
+Or, if you want to evaluate the model at a specific training step (instead of the latest checkpointed step), use `export RESUME_FROM_STEP=<step>`.
 
 ## Citation
 

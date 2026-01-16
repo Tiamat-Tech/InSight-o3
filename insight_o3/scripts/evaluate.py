@@ -358,8 +358,10 @@ async def run_trials(args: argparse.Namespace, trials_to_run: list[int]):
     try:
         if args.separate_trial_requests:
             for trial_id in trials_to_run:
+                print(f"Running trial {trial_id}")
                 await main(args, [trial_id], client_main, client_judge)
         else:
+            print(f"Running trials {trials_to_run} together")
             await main(args, trials_to_run, client_main, client_judge)
     finally:
         await asyncio.gather(client_main.close(), client_judge.close())
