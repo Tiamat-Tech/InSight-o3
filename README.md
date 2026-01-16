@@ -202,7 +202,9 @@ They are mixed in 1:1 ratio as can be seen from the following part of `recipe/vs
 ```
 To use your own training datasets, you need to replace the name after `+data.batch_sampler.weights.` with the name you put in the `data_source` field of your training data parquet files.
 
-Auto-resuming is enabled by default. You can run the same command to resume training.
+Auto-resuming is enabled by default. You can always run the same command to resume training.
+To resume from a specific training step (instead of the latest checkpointed step), use `export RESUME_FROM_STEP=<step>`.
+
 More detailed configurations for training and evaluation can be found in `recipe/vsearch/_base.sh` and `recipe/vsearch/config/qwen_2_5_vl_7b_async.yaml`. Feel free to open issues if there's anything unclear!
 
 ### Evaluation
@@ -222,7 +224,8 @@ We recommend setting `NUM_VAL_TRIALS` to at least 3 and computing the average fo
 
 By default, verl will look for checkpoints under `trainer.default_local_dir` (set to `$WORK_DIR/ckpts/$PROJECT_NAME/$EXP_NAME`) and try to load the latest checkpoint.
 If this is not the desired behavior, e.g., you just want to evaluate the original model specified by `MODEL_PATH`, you can either change `trainer.default_local_dir` or turn auto-resuming off.
-Or, if you want to evaluate the model at a specific training step (instead of the latest checkpointed step), use `export RESUME_FROM_STEP=<step>`.
+
+More detailed configurations for training and evaluation can be found in `recipe/vsearch/_base.sh` and `recipe/vsearch/config/qwen_2_5_vl_7b_async.yaml`. Feel free to open issues if there's anything unclear!
 
 ## Citation
 
